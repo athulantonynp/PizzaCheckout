@@ -1,0 +1,71 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "Small Pizza",
+      "description": "10'' pizza for one person",
+      "price": 11.99,
+      "priceUnit": "$",
+      "image": "https://media-cdn.tripadvisor.com/media/photo-s/0c/b6/bf/18/this-is-the-10-inch-pizza.jpg"
+    },
+    {
+      "id": 2,
+      "name": "Medium Pizza",
+      "description": "12'' Pizza for two persons",
+      "price": 15.99,
+      "priceUnit": "$",
+      "image": "https://rp-media.faasos.io/catalog/images/UOJFJZLGYW.jpeg"
+    },
+    {
+      "id": 3,
+      "name": "Large Pizza",
+      "description": "15'' Pizza for four persons",
+      "price": 21.99,
+      "priceUnit": "$",
+      "image": "https://imgmedia.lbb.in/media/2019/10/5daa75d83893de5072d60cfb_1571452376311.jpg"
+    }
+  ],
+  "discountData": [
+    {
+      "type": "NONE",
+      "discountGroup": "Default",
+      "productIds": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "type": "BUY_X_GET_Y",
+      "discountGroup": "Microsoft",
+      "productIds": [
+        1
+      ],
+      "data": {
+        "buy": 2,
+        "get": 3
+      }
+    },
+    {
+      "type": "PRICE_DROP",
+      "discountGroup": "AMAZON",
+      "productIds": [
+        3
+      ],
+      "data": {
+        "droppedAmount": 2
+      }
+    },
+    {
+      "type": "BUY_X_GET_Y",
+      "discountGroup": "Facebook",
+      "productIds": [
+        2
+      ],
+      "data": {
+        "buy": 4,
+        "get": 5
+      }
+    }
+  ]
+}
