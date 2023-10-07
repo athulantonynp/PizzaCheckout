@@ -3,4 +3,8 @@
     <string name="discount_message_price_drop">Hurray! Your total amount to buy has dropped to %1$d !!😃</string>
     <string name="discount_message_buy_x_get_y">Yay! You have got %1$d %2$s for the total amount of %3$d !! 😃</string>
     <string name="checkout_message_default">Enjoy your meal! Happy to serve you! 😊</string>
+    <string name="clear_all">Clear All</string>
+    <string name="you_will_get">You will get total %1$d Pizzas!</string>
+    <string name="total_amount">Total Amount :  %1$d</string>
+    <string name="empty_cart">Empty items in cart. Add items to the cart</string>
 </resources>

@@ -44,7 +44,7 @@ class MainViewModel(private val app:Application,private val repository: Checkout
     fun init(){
         viewModelScope.launch(Dispatchers.IO) {
             val data = repository.productsData
-            data?.mapToProductUIData()?.let { _uiDataFlow.emit(it) }
+            data.mapToProductUIData().let { _uiDataFlow.emit(it) }
         }
     }
 
@@ -78,20 +78,20 @@ class MainViewModel(private val app:Application,private val repository: Checkout
            }
            _uiDataFlow.emit(newData)
        }
-        calculateAmountToBuy()
+        //calculateAmountToBuy()
     }
 
     /**
      * Updates the current discount group. Once updated, Total amount to buy is also calculated
      * @param group name of the new discount group user selected
      */
-    fun updateDiscountGroup(group:String){
+    fun updateDiscountGroup(group:String?){
         viewModelScope.launch {
             val newData = _uiDataFlow.value.copy()
             newData.currentSelectedDiscountGroup = group
             _uiDataFlow.emit(newData)
         }
-        calculateAmountToBuy()
+        //calculateAmountToBuy()
     }
 
     /**

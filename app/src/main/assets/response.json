@@ -39,7 +39,7 @@
     },
     {
       "type": "PRICE_DROP",
-      "discountGroup": "AMAZON",
+      "discountGroup": "Amazon",
       "productIds": [
         3
       ],

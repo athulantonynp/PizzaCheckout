@@ -13,18 +13,23 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import athul.pizza.checkout.R
 import athul.pizza.checkout.ui.beans.ProductItemUI
 import athul.pizza.checkout.ui.beans.ProductUIData
 import athul.pizza.checkout.ui.theme.black
@@ -39,7 +44,38 @@ fun CheckoutPage(viewModel: MainViewModel, topPadding: Dp) {
     val productData = viewModel.uiDataFlow.collectAsState(initial = ProductUIData())
     Column(modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = topPadding, bottom = 32.dp)) {
         ProductItems(productData.value.items,viewModel)
+        DiscountSection(viewModel,productData.value)
         BuyNowSection(viewModel)
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DiscountSection(viewModel: MainViewModel, value: ProductUIData) {
+    val showDialog = remember {
+        mutableStateOf(false)
+    }
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 16.dp),
+        shape = CardDefaults.outlinedShape,
+        colors = CardDefaults.outlinedCardColors(containerColor = white),
+        border = BorderStroke(1.dp, lightGray),
+        onClick = {
+            showDialog.value = true
+        }
+    ){
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(text = "Current Discount Group: ${value.currentSelectedDiscountGroup ?: "N/A"}",  color = black, fontWeight = FontWeight.Bold)
+            Text(text = "Click to change", modifier = Modifier.padding(top = 8.dp))
+        }
+    }
+    if (showDialog.value){
+        DiscountDialog(data = value.discountGroups ?: emptyList(), current =value.currentSelectedDiscountGroup ){
+            viewModel.updateDiscountGroup(it)
+            showDialog.value = false
+        }
     }
 }
 
@@ -65,7 +101,7 @@ fun BuyNowCard(totalAmountToBuy: Double?, totalPizzas: Int?, discountMessage: St
         colors = CardDefaults.outlinedCardColors(containerColor = black),
     ){
         Column( modifier = Modifier.padding(16.dp)) {
-            Text(text = "You will get total $totalPizzas Pizzas!",
+            Text(text = LocalContext.current.getString(R.string.you_will_get,totalPizzas),
                 textAlign = TextAlign.Center,
                 color = white, fontSize = 16.sp, modifier = Modifier.padding(vertical = 8.dp))
 
@@ -75,7 +111,7 @@ fun BuyNowCard(totalAmountToBuy: Double?, totalPizzas: Int?, discountMessage: St
                     color = green, fontSize = 18.sp, modifier = Modifier.padding(vertical = 8.dp),
                     fontWeight = FontWeight.Bold)
             }
-            Text(text = "Total Amount : $totalAmountToBuy",
+            Text(text = LocalContext.current.getString(R.string.total_amount,totalAmountToBuy),
                 textAlign = TextAlign.Center,
                 color = white, fontSize = 24.sp, modifier = Modifier.padding(vertical = 8.dp),
                 fontWeight = FontWeight.Bold)
@@ -92,7 +128,7 @@ fun EmptyCard(){
         shape = CardDefaults.outlinedShape,
         colors = CardDefaults.outlinedCardColors(containerColor = black),
     ){
-        Text(text = "Empty items in cart. Add items to the cart",
+        Text(text = LocalContext.current.getString(R.string.empty_cart),
             textAlign = TextAlign.Center,
             color = white, fontSize = 16.sp, modifier = Modifier.padding(16.dp))
     }
