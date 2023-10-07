@@ -34,7 +34,7 @@ data class DiscountData(
     @Json(name = "discountGroup")
     val discountGroup: String,
     @Json(name = "productIds")
-    val productIds: List<Long>,
+    val productIds: List<Int>,
     @Json(name = "data")
     val data: Data?,
 )

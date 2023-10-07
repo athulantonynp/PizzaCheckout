@@ -10,11 +10,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.lifecycleScope
-import athul.pizza.checkout.data.getProductsAndDiscountData
 import athul.pizza.checkout.ui.theme.PizzaCheckoutTheme
 import athul.pizza.checkout.ui.viewmodels.MainViewModel
-import kotlinx.coroutines.launch
 
  /**
   * Class for Main UI of the app. Since its a single page app, No need of fragments.

@@ -27,15 +27,6 @@
   ],
   "discountData": [
     {
-      "type": "NONE",
-      "discountGroup": "Default",
-      "productIds": [
-        1,
-        2,
-        3
-      ]
-    },
-    {
       "type": "BUY_X_GET_Y",
       "discountGroup": "Microsoft",
       "productIds": [

@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import athul.pizza.checkout.data.CheckoutRepository
+import athul.pizza.checkout.data.models.BuyData
 import athul.pizza.checkout.data.models.ProductData
 import athul.pizza.checkout.ui.beans.ProductUIData
 import athul.pizza.checkout.ui.beans.toProductItemUI
@@ -32,8 +33,8 @@ class MainViewModel(private val app:Application,private val repository: Checkout
     /**
      * Flow data class to paint total amount
      */
-    private val _totalAmountFlow = MutableStateFlow(0.0)
-    val totalAmountFlow: Flow<Double>
+    private val _totalAmountFlow = MutableStateFlow<BuyData?>(null)
+    val totalAmountFlow: Flow<BuyData?>
         get() = _totalAmountFlow
 
 
@@ -42,7 +43,7 @@ class MainViewModel(private val app:Application,private val repository: Checkout
      */
     fun init(){
         viewModelScope.launch(Dispatchers.IO) {
-            val data = repository.getProductsData()
+            val data = repository.productsData
             data?.mapToProductUIData()?.let { _uiDataFlow.emit(it) }
         }
     }
@@ -72,8 +73,8 @@ class MainViewModel(private val app:Application,private val repository: Checkout
                }
            }
            _uiDataFlow.emit(newData)
-           calculateAmountToBuy()
        }
+        calculateAmountToBuy()
     }
 
     /**
@@ -85,16 +86,29 @@ class MainViewModel(private val app:Application,private val repository: Checkout
             val newData = _uiDataFlow.value.copy()
             newData.currentSelectedDiscountGroup = group
             _uiDataFlow.emit(newData)
-            calculateAmountToBuy()
         }
+        calculateAmountToBuy()
     }
 
     /**
      * Calculates the total amount to buy based on the current user selections.
      * Also updates the UI once the calculation is done.
      */
-    private suspend fun calculateAmountToBuy(){
+    private fun calculateAmountToBuy(){
+       viewModelScope.launch {
+           val data = _uiDataFlow.value
+           val totalList = mutableListOf<BuyData>()
+           data.items?.forEach {
+               totalList.add(repository.getTotalAmountToBuyItem(it.id,it.itemCount,data.currentSelectedDiscountGroup))
+           }
+           val totalAmountToBuy = totalList.sumOf { it.totalAmountToBuy }
+           val discountMessage = totalList.first { !it.discountMessage.isNullOrEmpty() }.discountMessage
+           val totalItems = totalList.sumOf { it.totalPizzas }
 
+           _totalAmountFlow.emit(BuyData(
+               totalAmountToBuy,discountMessage,totalItems
+           ))
+       }
     }
     // Factory object inside companion object
     companion object {
