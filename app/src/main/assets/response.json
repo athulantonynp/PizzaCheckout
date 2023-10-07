@@ -27,13 +27,13 @@
   ],
   "discountData": [
     {
-      "type": "BUY_X_GET_Y",
+      "type": "GET_X_FOR_Y",
       "discountGroup": "Microsoft",
       "productIds": [
         1
       ],
       "data": {
-        "buy": 2,
+        "for": 2,
         "get": 3
       }
     },
@@ -48,13 +48,13 @@
       }
     },
     {
-      "type": "BUY_X_GET_Y",
+      "type": "GET_X_FOR_Y",
       "discountGroup": "Facebook",
       "productIds": [
         2
       ],
       "data": {
-        "buy": 4,
+        "for": 4,
         "get": 5
       }
     }

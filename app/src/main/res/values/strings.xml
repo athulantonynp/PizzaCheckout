@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Pizza Checkout</string>
     <string name="discount_message_price_drop">You have saved amount of $%1$s!!😃</string>
-    <string name="discount_message_buy_x_get_y">You have got %1$s %2$s instead of %3$s!! 😃</string>
+    <string name="discount_message_get_x_for_y">You have savings of $%1$s!! 😃</string>
     <string name="checkout_message_default">Enjoy your meal! Happy to serve you! 😊</string>
     <string name="clear_all">Clear All</string>
     <string name="total_pizzas">Total Pizzas : %1$s</string>

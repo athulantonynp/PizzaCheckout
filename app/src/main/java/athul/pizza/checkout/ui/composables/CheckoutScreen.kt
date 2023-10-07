@@ -44,14 +44,24 @@ import coil.compose.AsyncImage
 @Composable
 fun CheckoutPage(viewModel: MainViewModel, topPadding: Dp) {
     val productData = viewModel.uiDataFlow.collectAsState(initial = ProductUIData())
-    if (productData.value.items.isNullOrEmpty()){
-        Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+    if (productData.value.items.isNullOrEmpty()) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
             CircularProgressIndicator(color = black)
         }
-    }else{
-        Column(modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = topPadding, bottom = 32.dp)) {
-            ProductItems(productData.value.items,viewModel)
-            DiscountSection(viewModel,productData.value)
+    } else {
+        Column(
+            modifier = Modifier.padding(
+                start = 16.dp,
+                end = 16.dp,
+                top = topPadding,
+                bottom = 32.dp
+            )
+        ) {
+            ProductItems(productData.value.items, viewModel)
+            DiscountSection(viewModel, productData.value)
             BuyNowSection(viewModel)
         }
     }
@@ -73,14 +83,21 @@ fun DiscountSection(viewModel: MainViewModel, value: ProductUIData) {
         onClick = {
             showDialog.value = true
         }
-    ){
+    ) {
         Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
-            Text(text = "Current Discount Group: ${value.currentSelectedDiscountGroup ?: "Default"}",  color = black, fontWeight = FontWeight.Bold)
+            Text(
+                text = "Current Discount Group: ${value.currentSelectedDiscountGroup ?: "Default"}",
+                color = black,
+                fontWeight = FontWeight.Bold
+            )
             Text(text = "Click to change", modifier = Modifier.padding(top = 8.dp))
         }
     }
-    if (showDialog.value){
-        DiscountDialog(data = value.discountGroups ?: emptyList(), current =value.currentSelectedDiscountGroup ){
+    if (showDialog.value) {
+        DiscountDialog(
+            data = value.discountGroups ?: emptyList(),
+            current = value.currentSelectedDiscountGroup
+        ) {
             viewModel.updateDiscountGroup(it)
             showDialog.value = false
         }
@@ -91,10 +108,14 @@ fun DiscountSection(viewModel: MainViewModel, value: ProductUIData) {
 fun BuyNowSection(viewModel: MainViewModel) {
     val data = viewModel.totalAmountFlow.collectAsState(initial = null)
     Column(modifier = Modifier.padding(top = 8.dp)) {
-        if (data.value == null || data.value?.totalAmountToBuy?.toInt() == 0){
+        if (data.value == null || data.value?.totalAmountToBuy?.toInt() == 0) {
             EmptyCard()
-        }else{
-            BuyNowCard(data.value?.totalAmountToBuy,data.value?.totalPizzas,data.value?.discountMessage)
+        } else {
+            BuyNowCard(
+                data.value?.totalAmountToBuy,
+                data.value?.totalPizzas,
+                data.value?.discountMessage
+            )
         }
     }
 }
@@ -106,50 +127,64 @@ fun BuyNowCard(totalAmountToBuy: Double?, totalPizzas: Int?, discountMessage: St
             .fillMaxWidth(),
         shape = CardDefaults.outlinedShape,
         colors = CardDefaults.outlinedCardColors(containerColor = black),
-    ){
-        Column( modifier = Modifier.padding(16.dp)) {
-            if (!discountMessage.isNullOrEmpty()){
-                Text(text = discountMessage,
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            if (!discountMessage.isNullOrEmpty()) {
+                Text(
+                    text = discountMessage,
                     textAlign = TextAlign.Center,
                     color = green, fontSize = 16.sp, modifier = Modifier.padding(top = 8.dp),
-                    fontWeight = FontWeight.Bold)
+                    fontWeight = FontWeight.Bold
+                )
             }
-            Text(text = LocalContext.current.getString(R.string.total_pizzas,totalPizzas.toString()),
+            Text(
+                text = LocalContext.current.getString(
+                    R.string.total_pizzas,
+                    totalPizzas.toString()
+                ),
                 color = white, fontSize = 16.sp, modifier = Modifier.padding(vertical = 4.dp),
-                fontWeight = FontWeight.Bold)
-            Text(text = LocalContext.current.getString(R.string.total_amount,totalAmountToBuy.toString()),
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = LocalContext.current.getString(
+                    R.string.total_amount,
+                    totalAmountToBuy.toString()
+                ),
                 color = white, fontSize = 16.sp, modifier = Modifier.padding(vertical = 4.dp),
-                fontWeight = FontWeight.Bold)
+                fontWeight = FontWeight.Bold
+            )
         }
     }
 }
 
 @Composable
-fun EmptyCard(){
+fun EmptyCard() {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp),
         shape = CardDefaults.outlinedShape,
         colors = CardDefaults.outlinedCardColors(containerColor = black),
-    ){
-        Text(text = LocalContext.current.getString(R.string.empty_cart),
+    ) {
+        Text(
+            text = LocalContext.current.getString(R.string.empty_cart),
             textAlign = TextAlign.Center,
-            color = white, fontSize = 16.sp, modifier = Modifier.padding(16.dp))
+            color = white, fontSize = 16.sp, modifier = Modifier.padding(16.dp)
+        )
     }
 }
 
 @Composable
-fun ProductItems(items: List<ProductItemUI>?,viewModel: MainViewModel) {
-    LazyColumn(modifier = Modifier.padding(top = 8.dp, bottom = 8.dp)){
-        items(items ?: emptyList()){
-            ProductItem(item = it,viewModel)
+fun ProductItems(items: List<ProductItemUI>?, viewModel: MainViewModel) {
+    LazyColumn(modifier = Modifier.padding(top = 8.dp, bottom = 8.dp)) {
+        items(items ?: emptyList()) {
+            ProductItem(item = it, viewModel)
         }
     }
 }
 
 @Composable
-fun ProductItem(item:ProductItemUI,viewModel: MainViewModel){
+fun ProductItem(item: ProductItemUI, viewModel: MainViewModel) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -182,10 +217,10 @@ fun ProductItem(item:ProductItemUI,viewModel: MainViewModel){
                     fontSize = 12.sp
                 )
 
-                Counter(item.itemCount,onValueDecreaseClick = {
-                    viewModel.updateItemCount(item.id,false)
+                Counter(item.itemCount, onValueDecreaseClick = {
+                    viewModel.updateItemCount(item.id, false)
                 }, onValueIncreaseClick = {
-                    viewModel.updateItemCount(item.id,true)
+                    viewModel.updateItemCount(item.id, true)
                 })
             }
         }

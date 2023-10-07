@@ -30,4 +30,4 @@ App used to calculate the price of pizzas based on certain discount criteria. Wr
 
 UI <---> ViewModel (MainViewModel) <--> Repository (Checkout Repository) <--> JSON storage
 
-Feel free to raise any bugs or concerns as a Github repo!
+Feel free to raise any bugs or concerns as a Github issue!
