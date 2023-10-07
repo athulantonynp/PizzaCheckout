@@ -10,6 +10,7 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import athul.pizza.checkout.data.CheckoutRepository
 import athul.pizza.checkout.data.models.BuyData
 import athul.pizza.checkout.data.models.ProductData
+import athul.pizza.checkout.data.round
 import athul.pizza.checkout.ui.beans.ProductUIData
 import athul.pizza.checkout.ui.beans.toProductItemUI
 import kotlinx.coroutines.Dispatchers
@@ -78,7 +79,7 @@ class MainViewModel(private val app:Application,private val repository: Checkout
            }
            _uiDataFlow.emit(newData)
        }
-        //calculateAmountToBuy()
+        calculateAmountToBuy()
     }
 
     /**
@@ -91,7 +92,7 @@ class MainViewModel(private val app:Application,private val repository: Checkout
             newData.currentSelectedDiscountGroup = group
             _uiDataFlow.emit(newData)
         }
-        //calculateAmountToBuy()
+        calculateAmountToBuy()
     }
 
     /**
@@ -102,11 +103,13 @@ class MainViewModel(private val app:Application,private val repository: Checkout
        viewModelScope.launch {
            val data = _uiDataFlow.value
            val totalList = mutableListOf<BuyData>()
-           data.items?.forEach {
-               totalList.add(repository.getTotalAmountToBuyItem(it.id,it.itemCount,data.currentSelectedDiscountGroup))
+           data.items?.forEach { productItemUI ->
+               repository.getTotalAmountToBuyItem(productItemUI.id,productItemUI.itemCount,data.currentSelectedDiscountGroup)?.let {
+                   totalList.add(it)
+               }
            }
-           val totalAmountToBuy = totalList.sumOf { it.totalAmountToBuy }
-           val discountMessage = totalList.first { !it.discountMessage.isNullOrEmpty() }.discountMessage
+           val totalAmountToBuy = totalList.sumOf { it.totalAmountToBuy }.round()
+           val discountMessage = totalList.firstOrNull { !it.discountMessage.isNullOrEmpty() }?.discountMessage
            val totalItems = totalList.sumOf { it.totalPizzas }
 
            _totalAmountFlow.emit(BuyData(

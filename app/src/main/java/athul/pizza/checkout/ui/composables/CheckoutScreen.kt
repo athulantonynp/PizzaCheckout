@@ -2,6 +2,7 @@ package athul.pizza.checkout.ui.composables
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -13,6 +14,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -42,10 +44,16 @@ import coil.compose.AsyncImage
 @Composable
 fun CheckoutPage(viewModel: MainViewModel, topPadding: Dp) {
     val productData = viewModel.uiDataFlow.collectAsState(initial = ProductUIData())
-    Column(modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = topPadding, bottom = 32.dp)) {
-        ProductItems(productData.value.items,viewModel)
-        DiscountSection(viewModel,productData.value)
-        BuyNowSection(viewModel)
+    if (productData.value.items.isNullOrEmpty()){
+        Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+            CircularProgressIndicator(color = black)
+        }
+    }else{
+        Column(modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = topPadding, bottom = 32.dp)) {
+            ProductItems(productData.value.items,viewModel)
+            DiscountSection(viewModel,productData.value)
+            BuyNowSection(viewModel)
+        }
     }
 }
 
@@ -66,8 +74,8 @@ fun DiscountSection(viewModel: MainViewModel, value: ProductUIData) {
             showDialog.value = true
         }
     ){
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = "Current Discount Group: ${value.currentSelectedDiscountGroup ?: "N/A"}",  color = black, fontWeight = FontWeight.Bold)
+        Column(modifier = Modifier.padding(8.dp)) {
+            Text(text = "Current Discount Group: ${value.currentSelectedDiscountGroup ?: "Default"}",  color = black, fontWeight = FontWeight.Bold)
             Text(text = "Click to change", modifier = Modifier.padding(top = 8.dp))
         }
     }
@@ -82,7 +90,7 @@ fun DiscountSection(viewModel: MainViewModel, value: ProductUIData) {
 @Composable
 fun BuyNowSection(viewModel: MainViewModel) {
     val data = viewModel.totalAmountFlow.collectAsState(initial = null)
-    Column(modifier = Modifier.padding(top = 48.dp)) {
+    Column(modifier = Modifier.padding(top = 8.dp)) {
         if (data.value == null || data.value?.totalAmountToBuy?.toInt() == 0){
             EmptyCard()
         }else{
@@ -95,25 +103,22 @@ fun BuyNowSection(viewModel: MainViewModel) {
 fun BuyNowCard(totalAmountToBuy: Double?, totalPizzas: Int?, discountMessage: String?) {
     Card(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp),
+            .fillMaxWidth(),
         shape = CardDefaults.outlinedShape,
         colors = CardDefaults.outlinedCardColors(containerColor = black),
     ){
         Column( modifier = Modifier.padding(16.dp)) {
-            Text(text = LocalContext.current.getString(R.string.you_will_get,totalPizzas),
-                textAlign = TextAlign.Center,
-                color = white, fontSize = 16.sp, modifier = Modifier.padding(vertical = 8.dp))
-
             if (!discountMessage.isNullOrEmpty()){
                 Text(text = discountMessage,
                     textAlign = TextAlign.Center,
-                    color = green, fontSize = 18.sp, modifier = Modifier.padding(vertical = 8.dp),
+                    color = green, fontSize = 16.sp, modifier = Modifier.padding(top = 8.dp),
                     fontWeight = FontWeight.Bold)
             }
-            Text(text = LocalContext.current.getString(R.string.total_amount,totalAmountToBuy),
-                textAlign = TextAlign.Center,
-                color = white, fontSize = 24.sp, modifier = Modifier.padding(vertical = 8.dp),
+            Text(text = LocalContext.current.getString(R.string.total_pizzas,totalPizzas.toString()),
+                color = white, fontSize = 16.sp, modifier = Modifier.padding(vertical = 4.dp),
+                fontWeight = FontWeight.Bold)
+            Text(text = LocalContext.current.getString(R.string.total_amount,totalAmountToBuy.toString()),
+                color = white, fontSize = 16.sp, modifier = Modifier.padding(vertical = 4.dp),
                 fontWeight = FontWeight.Bold)
         }
     }
@@ -136,7 +141,7 @@ fun EmptyCard(){
 
 @Composable
 fun ProductItems(items: List<ProductItemUI>?,viewModel: MainViewModel) {
-    LazyColumn(modifier = Modifier.padding(top = 16.dp, bottom = 16.dp)){
+    LazyColumn(modifier = Modifier.padding(top = 8.dp, bottom = 8.dp)){
         items(items ?: emptyList()){
             ProductItem(item = it,viewModel)
         }
@@ -162,7 +167,7 @@ fun ProductItem(item:ProductItemUI,viewModel: MainViewModel){
                 contentDescription = "Image",
                 modifier = Modifier
                     .padding(16.dp)
-                    .size(92.dp)
+                    .size(80.dp)
                     .clip(CircleShape)
                     .background(Color.Gray)
             )
