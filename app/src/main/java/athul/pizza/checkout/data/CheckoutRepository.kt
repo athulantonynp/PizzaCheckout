@@ -15,7 +15,8 @@ import org.jetbrains.annotations.VisibleForTesting
  */
 class CheckoutRepository(private val context: Context) {
 
-    val productsData by lazy { fetchProductsData() }
+    @VisibleForTesting
+    internal var productsData :ProductData = fetchProductsData()
 
     /**
      * Fetches product data from response.json

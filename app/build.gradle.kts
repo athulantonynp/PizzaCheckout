@@ -7,6 +7,12 @@ android {
     namespace = "athul.pizza.checkout"
     compileSdk = 34
 
+    testOptions {
+       unitTests {
+           isIncludeAndroidResources = true
+       }
+    }
+
     defaultConfig {
         applicationId = "athul.pizza.checkout"
         minSdk = 27
@@ -60,6 +66,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
     testImplementation("junit:junit:4.13.2")
+    testImplementation("org.robolectric:robolectric:4.9")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.03.00"))

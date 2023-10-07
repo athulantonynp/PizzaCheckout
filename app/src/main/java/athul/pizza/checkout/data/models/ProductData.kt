@@ -42,9 +42,9 @@ data class DiscountData(
 @JsonClass(generateAdapter = true)
 data class Data(
     @Json(name = "for")
-    val forQuantity: Long?,
+    val forQuantity: Long? = null,
     @Json(name = "get")
-    val getQuantity: Long?,
+    val getQuantity: Long? = null,
     @Json(name = "droppedAmount")
-    val droppedAmount: Long?,
+    val droppedAmount: Long? = null,
 )
