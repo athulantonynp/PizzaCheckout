@@ -1,6 +1,7 @@
 package athul.pizza.checkout.data
 
 import android.app.Application
+import android.content.Context
 import athul.pizza.checkout.R
 import athul.pizza.checkout.data.models.BuyData
 import athul.pizza.checkout.data.models.ProductData
@@ -12,7 +13,7 @@ import org.jetbrains.annotations.VisibleForTesting
  * Core class responsible for fetching products and discount data.
  * Also calculates the total amount to buy including the discount.
  */
-class CheckoutRepository(private val app: Application) {
+class CheckoutRepository(private val context: Context) {
 
     val productsData by lazy { fetchProductsData() }
 
@@ -23,7 +24,7 @@ class CheckoutRepository(private val app: Application) {
      */
     @VisibleForTesting()
     internal fun fetchProductsData():ProductData {
-        val data = app.getJsonFromAssets("response.json")
+        val data = context.getJsonFromAssets("response.json")
         val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
         val adapter = moshi.adapter(ProductData::class.java)
         return data.let { adapter.fromJson(it) ?: ProductData(emptyList(), emptyList()) }
@@ -56,7 +57,7 @@ class CheckoutRepository(private val app: Application) {
                     val savings = (oldTotal-newPrice)
                     BuyData(
                         totalAmountToBuy = newPrice.round(),
-                        discountMessage =if (savings>0) app.getString(R.string.discount_message_get_x_for_y,savings.round().toString()) else null,
+                        discountMessage =if (savings>0) context.getString(R.string.discount_message_get_x_for_y,savings.round().toString()) else null,
                         totalPizzas = count
                     )
                 }
@@ -64,7 +65,7 @@ class CheckoutRepository(private val app: Application) {
                     val newPrice = item.price - (discountDetailOfGroup.data?.droppedAmount ?: 0)
                     val oldTotal = item.price * count
                     val totalAmount = (newPrice * count).round()
-                    val discountMessage = app.getString(R.string.discount_message_price_drop,(oldTotal-totalAmount).round().toString())
+                    val discountMessage = context.getString(R.string.discount_message_price_drop,(oldTotal-totalAmount).round().toString())
                     BuyData(
                         totalAmountToBuy = totalAmount,
                         discountMessage = discountMessage,
