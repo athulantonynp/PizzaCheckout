@@ -23,7 +23,7 @@ App used to calculate the price of pizzas based on certain discount criteria. Wr
 **Walkthrough Instructions**
 - [ ]  If you are looking for the core business logic, Head out to `java/athul/pizza/checkout/data/CheckoutRepository.kt`
 - [ ] UI component code is written in the package `java/athul/pizza/checkout/ui`
-- [ ]  Test cases are found in `PizzaCheckout/app/src/androidTest`
+- [ ]  Test cases are found in `PizzaCheckout/app/src/test`
 
 
 **A general flow of the app would be,**
