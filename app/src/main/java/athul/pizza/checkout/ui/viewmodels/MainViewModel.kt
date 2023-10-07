@@ -69,7 +69,11 @@ class MainViewModel(private val app:Application,private val repository: Checkout
                if (isIncrease){
                    it.itemCount++
                }else{
-                   it.itemCount--
+                   if (it.itemCount>0){
+                       it.itemCount--
+                   }else{
+                       it.itemCount=0
+                   }
                }
            }
            _uiDataFlow.emit(newData)

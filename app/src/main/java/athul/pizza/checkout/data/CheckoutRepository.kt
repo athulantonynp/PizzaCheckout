@@ -48,8 +48,8 @@ class CheckoutRepository(private val app: Application) {
                         BuyData(price*count, totalPizzas = count)
                     }else{
                         val bonusPizzas = (count/buy)*get
-                        val leftOverPizza = (count%buy)
-                        val totalPizzas = bonusPizzas + leftOverPizza
+                        val leftPizzaWithoutBonus = (count%buy)
+                        val totalPizzas = bonusPizzas + leftPizzaWithoutBonus
 
                         BuyData(
                             totalAmountToBuy = count * price,

@@ -1,15 +1,18 @@
  package athul.pizza.checkout
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import athul.pizza.checkout.ui.composables.AppBar
+import athul.pizza.checkout.ui.composables.CheckoutPage
 import athul.pizza.checkout.ui.theme.PizzaCheckoutTheme
 import athul.pizza.checkout.ui.viewmodels.MainViewModel
 
@@ -20,6 +23,8 @@ import athul.pizza.checkout.ui.viewmodels.MainViewModel
 
     private val viewModel: MainViewModel  by viewModels { MainViewModel.Factory }
 
+    @OptIn(ExperimentalMaterial3Api::class)
+    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -29,17 +34,17 @@ import athul.pizza.checkout.ui.viewmodels.MainViewModel
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting("Android")
+                    Scaffold(
+                       topBar = {
+                          AppBar(title = getString(R.string.app_name))
+                       }
+                    ) {
+                        CheckoutPage(viewModel,it.calculateTopPadding())
+                    }
+
                 }
             }
         }
+        viewModel.init()
     }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
 }
