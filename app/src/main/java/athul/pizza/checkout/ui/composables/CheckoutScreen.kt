@@ -74,7 +74,7 @@ fun DiscountSection(viewModel: MainViewModel, value: ProductUIData) {
             showDialog.value = true
         }
     ){
-        Column(modifier = Modifier.padding(8.dp)) {
+        Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
             Text(text = "Current Discount Group: ${value.currentSelectedDiscountGroup ?: "Default"}",  color = black, fontWeight = FontWeight.Bold)
             Text(text = "Click to change", modifier = Modifier.padding(top = 8.dp))
         }
