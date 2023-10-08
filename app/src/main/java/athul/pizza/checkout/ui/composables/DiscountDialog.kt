@@ -11,15 +11,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import athul.pizza.checkout.R
 import athul.pizza.checkout.ui.theme.black
 import athul.pizza.checkout.ui.theme.green
 
 @Composable
-fun DiscountDialog(data:List<String>,current:String?=null,onSelected:(String?)->Unit){
-    Dialog(onDismissRequest = {  }) {
+fun DiscountDialog(
+    data: List<String>,
+    current: String? = null,
+    onDismiss: () -> Unit,
+    onSelected: (String?) -> Unit
+) {
+    Dialog(
+        onDismissRequest = { onDismiss.invoke() },
+        properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = true)
+    ) {
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -27,15 +38,27 @@ fun DiscountDialog(data:List<String>,current:String?=null,onSelected:(String?)->
             shape = RoundedCornerShape(16.dp),
         ) {
             Column(Modifier.padding(16.dp)) {
-                data.forEach {value->
-                    ClickableText(text = AnnotatedString(value), onClick ={onSelected.invoke(value)}, modifier = Modifier.padding(8.dp), style = TextStyle(
-                        color = if (value ==current) green else black
-                    ))
+                data.forEach { value ->
+                    ClickableText(
+                        text = AnnotatedString(value),
+                        onClick = { onSelected.invoke(value) },
+                        modifier = Modifier.padding(8.dp),
+                        style = TextStyle(
+                            color = if (value == current) green else black,
+                            fontWeight = if (value == current) FontWeight.Bold else FontWeight.Medium,
+                            fontSize = 16.sp
+                        )
+                    )
                 }
 
-                ClickableText(text = AnnotatedString(LocalContext.current.getString(R.string.clear_all)), onClick ={onSelected.invoke(null)}, modifier = Modifier.padding(top = 16.dp, start = 8.dp), style = TextStyle(
-                    color = black
-                ))
+                ClickableText(
+                    text = AnnotatedString(LocalContext.current.getString(R.string.clear_all)),
+                    onClick = { onSelected.invoke(null) },
+                    modifier = Modifier.padding(top = 16.dp, start = 8.dp),
+                    style = TextStyle(
+                        color = black
+                    )
+                )
             }
         }
     }

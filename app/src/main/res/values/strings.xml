@@ -7,4 +7,5 @@
     <string name="total_pizzas">Total Pizzas : %1$s</string>
     <string name="total_amount">Total Amount :  $%1$s</string>
     <string name="empty_cart">Empty items in cart. Add items to the cart</string>
+    <string name="current_customer">Current customer: </string>
 </resources>

@@ -19,11 +19,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 /**
- * Viewmodel class for [MainActivity.kt]
+ * Viewmodel class for handling app's core function logics from [CheckoutRepository] to UI
  * @param app Application instance
  * @param repository Main data repository to handle app's bus
  */
-class MainViewModel(private val app:Application,private val repository: CheckoutRepository) : AndroidViewModel(app) {
+class MainViewModel(private val app: Application, private val repository: CheckoutRepository) :
+    AndroidViewModel(app) {
     /**
      * Flow data class to paint UI
      */
@@ -32,7 +33,7 @@ class MainViewModel(private val app:Application,private val repository: Checkout
         get() = _uiDataFlow
 
     /**
-     * Flow data class to paint total amount
+     * Flow data class to paint total amount (And other purchase related datas) section
      */
     private val _totalAmountFlow = MutableStateFlow<BuyData?>(null)
     val totalAmountFlow: Flow<BuyData?>
@@ -42,17 +43,25 @@ class MainViewModel(private val app:Application,private val repository: Checkout
     /**
      * Initial method to get the fresh product data
      */
-    fun init(){
+    fun init() {
         viewModelScope.launch(Dispatchers.IO) {
             val data = repository.productsData
             data.mapToProductUIData().let { _uiDataFlow.emit(it) }
         }
     }
 
-    private fun ProductData.mapToProductUIData():ProductUIData {
+    /**
+     * Maps [ProductData] to [ProductUIData]. The UI doesn't want to know the
+     * whole business related data to render.
+     */
+    private fun ProductData.mapToProductUIData(): ProductUIData {
         val existingData = _uiDataFlow.value
         return ProductUIData(
-            items = products.map { it.toProductItemUI(existingData.items?.firstOrNull {item-> it.id == item.id }?.itemCount ?: 0) },
+            items = products.map {
+                it.toProductItemUI(
+                    existingData.items?.firstOrNull { item -> it.id == item.id }?.itemCount ?: 0
+                )
+            },
             currentSelectedDiscountGroup = existingData.currentSelectedDiscountGroup,
             discountGroups = discountData.map { it.discountGroup }
         )
@@ -63,22 +72,22 @@ class MainViewModel(private val app:Application,private val repository: Checkout
      * @param itemId id of the product needs to be updated
      * @param isIncrease tells whether the operation is increase or decrease
      */
-    fun updateItemCount(itemId:Int, isIncrease:Boolean){
-       viewModelScope.launch {
-           val newData = _uiDataFlow.value.copy()
-           newData.items?.first { it.id == itemId }?.let {
-               if (isIncrease){
-                   it.itemCount++
-               }else{
-                   if (it.itemCount>0){
-                       it.itemCount--
-                   }else{
-                       it.itemCount=0
-                   }
-               }
-           }
-           _uiDataFlow.emit(newData)
-       }
+    fun updateItemCount(itemId: Int, isIncrease: Boolean) {
+        viewModelScope.launch {
+            val newData = _uiDataFlow.value.copy()
+            newData.items?.first { it.id == itemId }?.let {
+                if (isIncrease) {
+                    it.itemCount++
+                } else {
+                    if (it.itemCount > 0) {
+                        it.itemCount--
+                    } else {
+                        it.itemCount = 0
+                    }
+                }
+            }
+            _uiDataFlow.emit(newData)
+        }
         calculateAmountToBuy()
     }
 
@@ -86,7 +95,7 @@ class MainViewModel(private val app:Application,private val repository: Checkout
      * Updates the current discount group. Once updated, Total amount to buy is also calculated
      * @param group name of the new discount group user selected
      */
-    fun updateDiscountGroup(group:String?){
+    fun updateDiscountGroup(group: String?) {
         viewModelScope.launch {
             val newData = _uiDataFlow.value.copy()
             newData.currentSelectedDiscountGroup = group
@@ -99,24 +108,32 @@ class MainViewModel(private val app:Application,private val repository: Checkout
      * Calculates the total amount to buy based on the current user selections.
      * Also updates the UI once the calculation is done.
      */
-    private fun calculateAmountToBuy(){
-       viewModelScope.launch {
-           val data = _uiDataFlow.value
-           val totalList = mutableListOf<BuyData>()
-           data.items?.forEach { productItemUI ->
-               repository.getTotalAmountToBuyItem(productItemUI.id,productItemUI.itemCount,data.currentSelectedDiscountGroup)?.let {
-                   totalList.add(it)
-               }
-           }
-           val totalAmountToBuy = totalList.sumOf { it.totalAmountToBuy }.round()
-           val discountMessage = totalList.firstOrNull { !it.discountMessage.isNullOrEmpty() }?.discountMessage
-           val totalItems = totalList.sumOf { it.totalPizzas }
+    private fun calculateAmountToBuy() {
+        viewModelScope.launch {
+            val data = _uiDataFlow.value
+            val totalList = mutableListOf<BuyData>()
+            data.items?.forEach { productItemUI ->
+                repository.getTotalAmountToBuyItem(
+                    productItemUI.id,
+                    productItemUI.itemCount,
+                    data.currentSelectedDiscountGroup
+                )?.let {
+                    totalList.add(it)
+                }
+            }
+            val totalAmountToBuy = totalList.sumOf { it.totalAmountToBuy }.round()
+            val discountMessage =
+                totalList.firstOrNull { !it.discountMessage.isNullOrEmpty() }?.discountMessage
+            val totalItems = totalList.sumOf { it.totalPizzas }
 
-           _totalAmountFlow.emit(BuyData(
-               totalAmountToBuy,discountMessage,totalItems
-           ))
-       }
+            _totalAmountFlow.emit(
+                BuyData(
+                    totalAmountToBuy, discountMessage, totalItems
+                )
+            )
+        }
     }
+
     // Factory object inside companion object
     companion object {
 

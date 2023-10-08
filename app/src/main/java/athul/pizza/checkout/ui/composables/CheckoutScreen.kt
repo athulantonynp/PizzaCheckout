@@ -26,12 +26,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import athul.pizza.checkout.R
+import athul.pizza.checkout.data.CUSTOMER_DEFAULT
 import athul.pizza.checkout.ui.beans.ProductItemUI
 import athul.pizza.checkout.ui.beans.ProductUIData
 import athul.pizza.checkout.ui.theme.black
@@ -41,6 +45,9 @@ import athul.pizza.checkout.ui.theme.white
 import athul.pizza.checkout.ui.viewmodels.MainViewModel
 import coil.compose.AsyncImage
 
+/**
+ * Main app page composable for rendering the checkout page
+ */
 @Composable
 fun CheckoutPage(viewModel: MainViewModel, topPadding: Dp) {
     val productData = viewModel.uiDataFlow.collectAsState(initial = ProductUIData())
@@ -86,7 +93,14 @@ fun DiscountSection(viewModel: MainViewModel, value: ProductUIData) {
     ) {
         Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
             Text(
-                text = "Current Discount Group: ${value.currentSelectedDiscountGroup ?: "Default"}",
+                text = buildAnnotatedString {
+                    withStyle(style = SpanStyle(black)) {
+                        append(LocalContext.current.getString(R.string.current_customer))
+                    }
+                    withStyle(style = SpanStyle(green)) {
+                        append(" ${value.currentSelectedDiscountGroup ?: CUSTOMER_DEFAULT}")
+                    }
+                },
                 color = black,
                 fontWeight = FontWeight.Bold
             )
@@ -96,7 +110,8 @@ fun DiscountSection(viewModel: MainViewModel, value: ProductUIData) {
     if (showDialog.value) {
         DiscountDialog(
             data = value.discountGroups ?: emptyList(),
-            current = value.currentSelectedDiscountGroup
+            current = value.currentSelectedDiscountGroup,
+            onDismiss = { showDialog.value = false }
         ) {
             viewModel.updateDiscountGroup(it)
             showDialog.value = false
@@ -206,7 +221,11 @@ fun ProductItem(item: ProductItemUI, viewModel: MainViewModel) {
                     .clip(CircleShape)
                     .background(Color.Gray)
             )
-            Column(modifier = Modifier.fillMaxHeight()) {
+            Column(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .weight(1f)
+            ) {
                 Text(
                     text = item.name,
                     modifier = Modifier,
@@ -223,6 +242,11 @@ fun ProductItem(item: ProductItemUI, viewModel: MainViewModel) {
                     viewModel.updateItemCount(item.id, true)
                 })
             }
+            Text(
+                text = "${item.priceUnit}${item.price}",
+                modifier = Modifier.padding(end = 16.dp),
+                fontWeight = FontWeight.Bold
+            )
         }
     }
 }

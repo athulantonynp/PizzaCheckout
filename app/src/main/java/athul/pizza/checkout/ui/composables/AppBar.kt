@@ -12,7 +12,7 @@ import athul.pizza.checkout.ui.theme.white
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppBar(title:String){
+fun AppBar(title: String) {
     TopAppBar(
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
             containerColor = black,

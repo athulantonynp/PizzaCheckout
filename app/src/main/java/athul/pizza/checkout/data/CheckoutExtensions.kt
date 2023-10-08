@@ -8,7 +8,7 @@ import java.nio.charset.Charset
  * Utility function to read file in asset folder to String
  */
 fun Context.getJsonFromAssets(fileName: String): String {
-    var jsonString="{}"
+    var jsonString = "{}"
     try {
         val inputStream = assets.open(fileName)
         val size = inputStream.available()
@@ -27,6 +27,6 @@ fun Context.getJsonFromAssets(fileName: String): String {
 /**
  * Rounds double value to 2 floating pointers.
  */
-fun Double.round():Double{
-   return String.format("%.2f", this).toDouble()
+fun Double.round(): Double {
+    return String.format("%.2f", this).toDouble()
 }

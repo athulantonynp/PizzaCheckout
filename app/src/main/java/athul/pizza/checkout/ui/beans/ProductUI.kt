@@ -4,10 +4,10 @@ package athul.pizza.checkout.ui.beans
  * Data class to hold UI state
  */
 data class ProductUIData(
-    val items:List<ProductItemUI>?=null,
-    val discountGroups:List<String>?=null,
-    var currentSelectedDiscountGroup:String?=null,
-){
+    val items: List<ProductItemUI>? = null,
+    val discountGroups: List<String>? = null,
+    var currentSelectedDiscountGroup: String? = null,
+) {
     override fun equals(other: Any?): Boolean {
         return super.equals(other)
     }
@@ -20,6 +20,6 @@ data class ProductItemUI(
     val price: Double,
     val priceUnit: String,
     val image: String,
-    var itemCount:Int
+    var itemCount: Int
 )
 

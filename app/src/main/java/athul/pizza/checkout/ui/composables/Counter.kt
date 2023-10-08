@@ -16,12 +16,19 @@ import athul.pizza.checkout.ui.theme.black
 import athul.pizza.checkout.ui.theme.white
 
 @Composable
-fun Counter(value:Int=0, onValueDecreaseClick: () -> Unit, onValueIncreaseClick: () ->Unit ){
-    Row(modifier = Modifier.padding(vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
+fun Counter(value: Int = 0, onValueDecreaseClick: () -> Unit, onValueIncreaseClick: () -> Unit) {
+    Row(
+        modifier = Modifier.padding(vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         RoundButton(text = "-") {
             onValueDecreaseClick.invoke()
         }
-        Text(text = value.toString(),modifier = Modifier.padding(horizontal = 8.dp),fontWeight = FontWeight.Bold)
+        Text(
+            text = value.toString(),
+            modifier = Modifier.padding(horizontal = 8.dp),
+            fontWeight = FontWeight.Bold
+        )
         RoundButton(text = "+") {
             onValueIncreaseClick.invoke()
         }
@@ -29,7 +36,7 @@ fun Counter(value:Int=0, onValueDecreaseClick: () -> Unit, onValueIncreaseClick:
 }
 
 @Composable
-fun RoundButton(text:String,onClick:()->Unit){
+fun RoundButton(text: String, onClick: () -> Unit) {
     Button(
         onClick = { onClick.invoke() },
         modifier = Modifier
