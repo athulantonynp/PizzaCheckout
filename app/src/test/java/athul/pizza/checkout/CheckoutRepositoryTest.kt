@@ -1,4 +1,5 @@
 package athul.pizza.checkout
+
 import athul.pizza.checkout.data.CheckoutRepository
 import athul.pizza.checkout.data.DISCOUNT_TYPE_GET_X_FOR_Y
 import athul.pizza.checkout.data.DISCOUNT_TYPE_PRICE_DROP
@@ -37,43 +38,64 @@ class CheckoutRepositoryTest {
     @Test
     fun `testGetTotalAmountToBuyItem with price drop type`() {
         checkoutRepository.productsData = ProductData(
-            products = listOf(Product(1,"test","description",10.0,"$","")),
-            discountData = listOf(DiscountData(DISCOUNT_TYPE_PRICE_DROP,"GROUP_1", listOf(1),data = Data(droppedAmount = 2L, forQuantity = null, getQuantity = null)))
+            products = listOf(Product(1, "test", "description", 10.0, "$", "")),
+            discountData = listOf(
+                DiscountData(
+                    DISCOUNT_TYPE_PRICE_DROP,
+                    "GROUP_1",
+                    listOf(1),
+                    data = Data(droppedAmount = 2L, forQuantity = null, getQuantity = null)
+                )
+            )
         )
 
-        val result1 = checkoutRepository.getTotalAmountToBuyItem(1,2,"GROUP_1")
+        val result1 = checkoutRepository.getTotalAmountToBuyItem(1, 2, "GROUP_1")
         assert(result1?.totalAmountToBuy == 16.0)
         assert(result1?.discountMessage != null)
 
-        val result2 = checkoutRepository.getTotalAmountToBuyItem(1,2,"DEFAULT")
+        val result2 = checkoutRepository.getTotalAmountToBuyItem(1, 2, "DEFAULT")
         assert(result2?.totalAmountToBuy == 20.0)
         assert(result2?.discountMessage == null)
     }
 
     @Test
-    fun `testGetTotalAmountToBuyItem with get x for y type`(){
+    fun `testGetTotalAmountToBuyItem with get x for y type`() {
         checkoutRepository.productsData = ProductData(
-            products = listOf(Product(1,"test","description",11.99,"$","")),
-            discountData = listOf(DiscountData(DISCOUNT_TYPE_GET_X_FOR_Y,"GROUP_1", listOf(1),data = Data(forQuantity = 2, getQuantity = 3)))
+            products = listOf(Product(1, "test", "description", 11.99, "$", "")),
+            discountData = listOf(
+                DiscountData(
+                    DISCOUNT_TYPE_GET_X_FOR_Y,
+                    "GROUP_1",
+                    listOf(1),
+                    data = Data(forQuantity = 2, getQuantity = 3)
+                )
+            )
         )
 
-        val result1 = checkoutRepository.getTotalAmountToBuyItem(1,3,"GROUP_1")
+        val result1 = checkoutRepository.getTotalAmountToBuyItem(1, 3, "GROUP_1")
         assert(result1?.totalAmountToBuy == 23.98)
         assert(result1?.discountMessage != null)
 
-        val result2 = checkoutRepository.getTotalAmountToBuyItem(1,3,"DEFAULT")
+        val result2 = checkoutRepository.getTotalAmountToBuyItem(1, 3, "DEFAULT")
         assert(result2?.totalAmountToBuy == 35.97)
         assert(result2?.discountMessage == null)
     }
 
     @Test
-    fun `testGetTotalAmountToBuyItem with empty or zero count`(){
+    fun `testGetTotalAmountToBuyItem with empty or zero count`() {
         checkoutRepository.productsData = ProductData(
-            products = listOf(Product(1,"test","description",11.99,"$","")),
-            discountData = listOf(DiscountData(DISCOUNT_TYPE_GET_X_FOR_Y,"GROUP_1", listOf(1),data = Data(forQuantity = 2, getQuantity = 3)))
+            products = listOf(Product(1, "test", "description", 11.99, "$", "")),
+            discountData = listOf(
+                DiscountData(
+                    DISCOUNT_TYPE_GET_X_FOR_Y,
+                    "GROUP_1",
+                    listOf(1),
+                    data = Data(forQuantity = 2, getQuantity = 3)
+                )
+            )
         )
 
-        val result = checkoutRepository.getTotalAmountToBuyItem(1,0,"GROUP_1")
+        val result = checkoutRepository.getTotalAmountToBuyItem(1, 0, "GROUP_1")
         assert(result == null)
     }
 }
