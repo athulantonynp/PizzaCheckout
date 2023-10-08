@@ -5,7 +5,7 @@ App used to calculate the price of pizzas based on certain discount criteria. Wr
 
 **Screenshot**
 <div>  
-<img src="https://raw.githubusercontent.com/athulantonynp/PizzaCheckout/main/screenshots/Screenshot%202023-10-07%20at%204.37.56%20PM.png" width="300px" />  
+<img src="https://raw.githubusercontent.com/athulantonynp/PizzaCheckout/main/screenshots/main.png" width="300px" />  
 </div>  
 
 **Tech stack.**
